@@ -48,7 +48,6 @@ private:
 	float sfactor;
 
 	Eigen::Vector3f eye;
-	//Eigen::Vector3f target;
 	Eigen::Vector3f up;
 	Eigen::Vector3f f;
 	Eigen::Vector3f r;

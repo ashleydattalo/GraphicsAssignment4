@@ -270,7 +270,7 @@ static void init()
 
 	materialPtr = pink;
 
-	sunPos = Vector3f(5, 5, 0);
+	sunPos = Vector3f(13, 3, 0);
 
 	//Light stuff
 	Vector3f pos0 = sunPos;
@@ -311,8 +311,6 @@ static void render()
 	P->pushMatrix();
 	camera->applyProjectionMatrix(P);
 	MV->pushMatrix();
-	// Matrix4f mat = MV->topMatrix();
-	// Matrix4f result = mat * Vector4f(sunPos, 1);
 	camera->applyViewMatrix(MV);
 
 
@@ -384,62 +382,54 @@ static void render()
 	GLSL::checkError(GET_FILE_LINE);
 }
 
+void drawShape(shared_ptr<MatrixStack> MV, shared_ptr<MatrixStack> P, shared_ptr<Shape> shape, Vector3f t) {
+
+	glUniform3f(prog->getUniform("kd"), .8, .7, .7);
+	glUniform3f(prog->getUniform("ks"), 1.0f, .9f, .8f);
+	glUniform1f(prog->getUniform("s"), 200);
+
+	MV->pushMatrix();
+	MV->translate(t);
+	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, P->topMatrix().data());
+	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, MV->topMatrix().data());
+	shape->draw(prog);
+	MV->popMatrix();
+}
+
 void drawShapes(shared_ptr<MatrixStack> MV, shared_ptr<MatrixStack> P) {
 	MV->pushMatrix();
 	MV->scale(2, 2, 2);
 	
 
 	MV->pushMatrix();
-	MV->translate(1, 0, 1);
+	MV->translate(0, 0, 1);
+	MV->rotate(90, 0, 1, 0);
 	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, P->topMatrix().data());
 	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, MV->topMatrix().data());
-	//shape1->draw(prog);
-	shape->draw(prog);
+	shape1->draw(prog);
+	//shape->draw(prog);
 	MV->popMatrix();
 	
 
+	glUniform3f(prog->getUniform("ka"), .5, .3, .7);
+	drawShape(MV, P, imperial, Vector3f(-1, 0, 0));
+	drawShape(MV, P, imperial, Vector3f(1, 0, 0));
 
-	//space stuff
-	MV->pushMatrix();
-	MV->translate(-1, 0, 0);
-	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, P->topMatrix().data());
-	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, MV->topMatrix().data());
-	//imperial->draw(prog);
-	shape->draw(prog);
-	MV->popMatrix();
+	glUniform3f(prog->getUniform("ka"), .1, .9, .4);
+	drawShape(MV, P, voyager, Vector3f(-2, 0, 0));
+	drawShape(MV, P, voyager, Vector3f(2, 0, 0));
 
+	glUniform3f(prog->getUniform("ka"), 0, 0, .5);;
+	drawShape(MV, P, spaceShip, Vector3f(-3, 0, 0));
+	drawShape(MV, P, spaceShip, Vector3f(3, 0, 0));
 
-	MV->pushMatrix();
-	MV->translate(-2, 0, 0);
-	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, P->topMatrix().data());
-	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, MV->topMatrix().data());
-	spaceShip->draw(prog);
-	MV->popMatrix();
+	glUniform3f(prog->getUniform("ka"), .8, .1, .3);
+	drawShape(MV, P, executor, Vector3f(-4, 0, 0));
+	drawShape(MV, P, executor, Vector3f(4, 0, 0));
 
-
-	MV->pushMatrix();
-	MV->translate(-3, 0, 0);
-	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, P->topMatrix().data());
-	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, MV->topMatrix().data());
-	voyager->draw(prog);
-	MV->popMatrix();
-
-
-	MV->pushMatrix();
-	MV->translate(-4, 0, 0);
-	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, P->topMatrix().data());
-	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, MV->topMatrix().data());
-	executor->draw(prog);
-	MV->popMatrix();
-
-
-	MV->pushMatrix();
-	MV->translate(-5, 0, 0);
-	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, P->topMatrix().data());
-	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, MV->topMatrix().data());
-	eWing->draw(prog);
-	MV->popMatrix();
-
+	glUniform3f(prog->getUniform("ka"), .3, .7, .4);
+	drawShape(MV, P, eWing, Vector3f(-5, 0, 0));
+	drawShape(MV, P, eWing, Vector3f(5, 0, 0));
 
 	MV->popMatrix();
 }

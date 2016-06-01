@@ -15,7 +15,7 @@ Camera::Camera() :
 	tfactor(0.001f),
 	sfactor(0.005f)
 {
-	eye = Vector3f(0.0, 0.0, -3.0);
+	eye = Vector3f(0.0, 0.0, -25.0);
 	up = Vector3f(0, 1, 0);
 
 	yaw = 0;
@@ -83,9 +83,6 @@ void Camera::mouseMoved(double x, double y)
 	if (dv[1] > 0) {
 		pitch -= 0.01f;
 	}
-
-	// f = {sin(yaw), 0, cos(yaw)};
-	// r = {-cos(yaw), 0, sin(yaw)};
 	
 	mousePrev = mouseCurr;
 }
